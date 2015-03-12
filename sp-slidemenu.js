@@ -188,7 +188,9 @@ SpSlidemenu.prototype.init = function(options) {
 
     // slide
     _this.slideWidth = (getDimentions(_this.slidemenu)).width;
-    _this.main.SpSlidemenuStatus = SLIDE_STATUS.close;
+    for (var i = _this.main.length; i--; ) {
+        _this.main[i].SpSlidemenuStatus = SLIDE_STATUS.close;
+    }
     _this.htmlOverflowX = '';
     _this.bodyOverflowX = '';
 
@@ -234,7 +236,9 @@ SpSlidemenu.prototype.bindMethods = function() {
 };
 
 SpSlidemenu.prototype.setElement = function(options) {
-    var _this = this;
+    var _this, _main;
+    _this = this;
+    _main = options.main.split(",");
 
     for(var k in options) {
       if (typeof options[k] !== "string") {
@@ -242,7 +246,8 @@ SpSlidemenu.prototype.setElement = function(options) {
       }
     }
 
-    _this.main = document.querySelector(options.main);
+    _this.main = document.querySelectorAll(options.main);
+    _this._mainBody = document.querySelector(_main[0]);
     _this.slidemenu = document.querySelector(options.slidemenu);
     _this.button = document.querySelector(options.button);
     _this.slidemenuBody = document.querySelector(options.slidemenu_body);
@@ -258,13 +263,15 @@ SpSlidemenu.prototype.setDefaultStyle = function() {
     }
     _this.setHeight();
     if (_this.useCssAnimation) {
-        setStyles(_this.main, {
-            transitionProperty: getCSSName('transform'),
-            transitionTimingFunction: 'ease-in-out',
-            transitionDuration: ANIME_SPEED.slider + 'ms',
-            transitionDelay: '0ms',
-            transform: _this.getTranslateX(0)
-        });
+        for (var i = _this.main.length; i--; ) {
+            setStyles(_this.main[i], {
+                transitionProperty: getCSSName('transform'),
+                transitionTimingFunction: 'ease-in-out',
+                transitionDuration: ANIME_SPEED.slider + 'ms',
+                transitionDelay: '0ms',
+                transform: _this.getTranslateX(0)
+            });
+        }
         setStyles(_this.slidemenu, {
             transitionProperty: 'visibility',
             transitionTimingFunction: 'linear',
@@ -279,10 +286,12 @@ SpSlidemenu.prototype.setDefaultStyle = function() {
             transform: _this.getTranslateY(0)
         });
     } else {
-        setStyles(_this.main, {
-            position: 'relative',
-            left: '0px'
-        });
+        for (var i = _this.main.length; i--; ) {
+            setStyles(_this.main[i], {
+                position: 'relative',
+                left: '0px'
+            });
+        }
         setStyles(_this.slidemenuContent, {
             top: '0px'
         });
@@ -294,7 +303,7 @@ SpSlidemenu.prototype.setHeight = function(event) {
     _this = this;
     browserHeight = getBrowserHeight();
 
-    setStyles(_this.main, {
+    setStyles(_this._mainBody, {
         minHeight: browserHeight + 'px'
     });
     setStyles(_this.slidemenu, {
@@ -308,14 +317,16 @@ SpSlidemenu.prototype.buttonTouchStart = function(event) {
     event.preventDefault();
     event.stopPropagation();
 
-    switch(_this.main.SpSlidemenuStatus) {
-    case SLIDE_STATUS.progress:
-        break;
-    case SLIDE_STATUS.open:
-    case SLIDE_STATUS.close:
-        _this.buttonStartPageX = getPage(event, 'pageX');
-        _this.buttonStartPageY = getPage(event, 'pageY');
-        break;
+    for (var i = _this.main.length; i--; ) {
+        switch(_this.main[i].SpSlidemenuStatus) {
+        case SLIDE_STATUS.progress:
+            break;
+        case SLIDE_STATUS.open:
+        case SLIDE_STATUS.close:
+            _this.buttonStartPageX = getPage(event, 'pageX');
+            _this.buttonStartPageY = getPage(event, 'pageY');
+            break;
+        }
     }
 };
 
@@ -326,15 +337,17 @@ SpSlidemenu.prototype.buttonTouchEnd = function(event) {
     event.stopPropagation();
 
     if (_this.shouldTrigerNext(event)) {
-        switch(_this.main.SpSlidemenuStatus) {
-        case SLIDE_STATUS.progress:
-            break;
-        case SLIDE_STATUS.open:
-            _this.slideClose(event);
-            break;
-        case SLIDE_STATUS.close:
-            _this.slideOpen(event);
-            break;
+        for (var i = _this.main.length; i--; ) {
+            switch(_this.main[i].SpSlidemenuStatus) {
+            case SLIDE_STATUS.progress:
+                break;
+            case SLIDE_STATUS.open:
+                _this.slideClose(event);
+                break;
+            case SLIDE_STATUS.close:
+                _this.slideOpen(event);
+                break;
+            }
         }
     }
 };
@@ -366,7 +379,9 @@ SpSlidemenu.prototype.slideOpen = function(event) {
     } else {
         toX = -_this.slideWidth;
     }
-    _this.main.SpSlidemenuStatus = SLIDE_STATUS.progress;
+    for (var i = _this.main.length; i--; ) {
+        _this.main[i].SpSlidemenuStatus = SLIDE_STATUS.progress;
+    }
 
     //set event
     addTouchEvent('move', document, blockEvent, false);
@@ -376,16 +391,20 @@ SpSlidemenu.prototype.slideOpen = function(event) {
     _this.bodyOverflowX = document.body.style['overflowX'];
     document.documentElement.style['overflowX'] = document.body.style['overflowX'] = 'hidden';
     if (_this.useCssAnimation) {
-        setStyles(_this.main, {
-            transform: _this.getTranslateX(toX)
-        });
+        for (var i = _this.main.length; i--; ) {
+            setStyles(_this.main[i], {
+                transform: _this.getTranslateX(toX)
+            });
+        }
         setStyles(_this.slidemenu, {
             transitionProperty: 'z-index',
             visibility: 'visible',
             zIndex: '1'
         });
     } else {
-        animate(_this.main, _this.direction, toX, ANIME_SPEED.slider);
+        for (var i = _this.main.length; i--; ) {
+            animate(_this.main[i], _this.direction, toX, ANIME_SPEED.slider);
+        }
         setStyles(_this.slidemenu, {
             visibility: 'visible'
         });
@@ -397,7 +416,9 @@ SpSlidemenu.prototype.slideOpen = function(event) {
 SpSlidemenu.prototype.slideOpenEnd = function() {
     var _this = this;
 
-    _this.main.SpSlidemenuStatus = SLIDE_STATUS.open;
+    for (var i = _this.main.length; i--; ) {
+        _this.main[i].SpSlidemenuStatus = SLIDE_STATUS.open;
+    }
 
     // change style
     if (_this.useCssAnimation) {
@@ -408,16 +429,22 @@ SpSlidemenu.prototype.slideOpenEnd = function() {
     }
 
     // add event
-    addTouchEvent('start', _this.main, _this.mainTouchStart, false);
+    for (var i = _this.main.length; i--; ) {
+        addTouchEvent('start', _this.main[i], _this.mainTouchStart, false);
+    }
 };
 
 SpSlidemenu.prototype.slideClose = function(event) {
     var _this = this;
 
-    _this.main.SpSlidemenuStatus = SLIDE_STATUS.progress;
+    for (var i = _this.main.length; i--; ) {
+        _this.main[i].SpSlidemenuStatus = SLIDE_STATUS.progress;
+    }
 
     //event
-    removeTouchEvent('start', _this.main, _this.mainTouchStart, false);
+    for (var i = _this.main.length; i--; ) {
+        removeTouchEvent('start', _this.main[i], _this.mainTouchStart, false);
+    }
 
     // change style
     if (_this.useCssAnimation) {
@@ -428,12 +455,16 @@ SpSlidemenu.prototype.slideClose = function(event) {
         });
 
         setTimeout( function() {
-          setStyles(_this.main, {
+          for (var i = _this.main.length; i--; ) {
+            setStyles(_this.main[i], {
               transform: _this.getTranslateX(0)
-          });
+            });
+          }
         }, 50);
     } else {
-        animate(_this.main, _this.direction, 0, ANIME_SPEED.slider);
+        for (var i = _this.main.length; i--; ) {
+            animate(_this.main[i], _this.direction, 0, ANIME_SPEED.slider);
+        }
         setStyles(_this.slidemenu, {
             zIndex: '-1'
         });
@@ -445,7 +476,9 @@ SpSlidemenu.prototype.slideClose = function(event) {
 SpSlidemenu.prototype.slideCloseEnd = function() {
     var _this = this;
 
-    _this.main.SpSlidemenuStatus = SLIDE_STATUS.close;
+    for (var i = _this.main.length; i--; ) {
+        _this.main[i].SpSlidemenuStatus = SLIDE_STATUS.close;
+    }
 
     // change style
     document.documentElement.style['overflowX'] = _this.htmlOverflowX;

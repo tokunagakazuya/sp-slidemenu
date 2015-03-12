@@ -276,7 +276,8 @@ SpSlidemenu.prototype.setDefaultStyle = function() {
             transitionProperty: 'visibility',
             transitionTimingFunction: 'linear',
             transitionDuration: '0ms',
-            transitionDelay: ANIME_SPEED.slider + 'ms'
+            transitionDelay: ANIME_SPEED.slider + 'ms',
+            transform: 'translateZ(0)'
         });
         setStyles(_this.slidemenuContent, {
             transitionProperty: getCSSName('transform'),
@@ -451,7 +452,7 @@ SpSlidemenu.prototype.slideClose = function(event) {
         setStyles(_this.slidemenu, {
             transitionProperty: 'visibility',
             visibility: 'hidden',
-            zIndex: '-1'
+            zIndex: '-1',
         });
 
         setTimeout( function() {

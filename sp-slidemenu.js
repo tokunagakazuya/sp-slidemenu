@@ -67,6 +67,8 @@ defaults = {
     slidemenu_header   : ".slidemenu-header",
     slidemenu_body     : ".slidemenu-body",
     slidemenu_content  : ".slidemenu-content",
+    disableCssAnimation: false,
+    disable3d          : false,
     direction          : 'left'
 };
 
@@ -159,7 +161,14 @@ SpSlidemenu.prototype.init = function(options) {
     }
 
     // find and set element.
-    _this.setElement(options);
+    _this.setElement({
+        main              : options.main,
+        slidemenu         : options.slidemenu,
+        button            : options.button,
+        slidemenu_body    : options.slidemenu_body,
+        slidemenu_content : options.slidemenu_content,
+        slidemenu_header  : options.slidemenu_header
+    });
     if (!_this.main || !_this.slidemenu || !_this.button || !_this.slidemenuBody || !_this.slidemenuContent) {
         throw new Error('Element not found. Please set correctly.');
     }

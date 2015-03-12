@@ -165,7 +165,12 @@ SpSlidemenu.prototype.init = function(options) {
     }
 
     _this.disableCssAnimation = (options.disableCssAnimation === undefined) ? false : options.disableCssAnimation;
-    _this.disable3d = (options.disable3d === undefined) ? false : options.disable3d;
+    //Android 2.3 is true the disable3d
+    //http://be-hase.com/javascript/428/
+    _this.disable3d = (function () {
+        var ua = navigator.userAgent;
+        return ua.indexOf("Android") > -1 && parseFloat(ua.slice(ua.indexOf("Android")+8)) <= 2.3;
+    }()) ? true : (options.disable3d === undefined) ? false : options.disable3d;
     _this.direction = 'left';
     if (options.direction === 'right') {
         _this.direction = 'right';

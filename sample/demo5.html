@@ -2,9 +2,26 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Left And Right | SpSlidemenu</title>
+  <title>Position Fixed | SpSlidemenu</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
   <link rel="stylesheet" type="text/css" href="./css/styles.css"/>
+  <style>
+      #header {
+          position: fixed;
+          z-index: 1;
+      }
+      #main {
+          padding-top: 50px;
+          background-color: #fff;
+          z-index: 1;
+      }
+      #footer {
+          line-height: 50px;
+          background-color: #333;
+          color: #ffffff;
+          text-align: center;
+      }
+  </style>
 </head>
 <body>
   <div class="slidemenu slidemenu-left">
@@ -91,13 +108,13 @@
     </div>
   </div>
 
-  <div id="main">
-    <header id="header">
+  <header id="header">
       <span class="button menu-button-left">
       </span>
       <span class="button menu-button-right">
       </span>
-    </header>
+  </header>
+  <div id="main">
     <div id="contents">
       <h1>SpSlideMenu Demo</h1>
       <p><a href="demo1.html">Demo 1</a> : Standard</p>
@@ -105,20 +122,51 @@
       <p><a href="demo3.html">Demo 3</a> : Right</p>
       <p><a href="demo4.html">Demo 4</a> : Left And Right</p>
       <p><a href="demo5.html">Demo 5</a> : Position Fixed</p>
+      <br>
+      <ul>
+          <li>List</li>
+          <li>List</li>
+          <li>List</li>
+          <li>List</li>
+          <li>List</li>
+          <li>List</li>
+          <li>List</li>
+          <li>List</li>
+          <li>List</li>
+          <li>List</li>
+          <li>List</li>
+          <li>List</li>
+          <li>List</li>
+          <li>List</li>
+          <li>List</li>
+          <li>List</li>
+          <li>List</li>
+          <li>List</li>
+          <li>List</li>
+          <li>List</li>
+          <li>List</li>
+          <li>List</li>
+          <li>List</li>
+          <li>List</li>
+          <li>List</li>
+      </ul>
     </div><!-- contents -->
   </div>
+  <footer id="footer">
+      Footer
+  </footer>
 
   <script type="text/javascript" src="../sp-slidemenu.js"></script>
   <script>
     var menu_left = SpSlidemenu({
-      main : '#main',
+      main : '#main, #header, #footer',
       button: '.menu-button-left',
       slidemenu : '.slidemenu-left',
       direction: 'left'
     });
 
     var menu_right = SpSlidemenu({
-      main : '#main',
+      main : '#main, #header, #footer',
       button: '.menu-button-right',
       slidemenu : '.slidemenu-right',
       direction: 'right'

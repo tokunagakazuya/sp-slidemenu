@@ -1,7 +1,7 @@
 /**
  * sp-slidemenu.js
  *
- * @version  0.1.0
+ * @version  0.1.2
  * @url https://github.com/be-hase/sp-slidemenu
  *
  * Copyright 2013 be-hase.com.
@@ -175,7 +175,6 @@ SpSlidemenu.prototype.init = function(options) {
 
     _this.disableCssAnimation = (options.disableCssAnimation === undefined) ? false : options.disableCssAnimation;
     //Android 2.3 is true the disable3d
-    //http://be-hase.com/javascript/428/
     _this.disable3d = (function () {
         var ua = navigator.userAgent;
         return ua.indexOf("Android") > -1 && parseFloat(ua.slice(ua.indexOf("Android")+8)) <= 2.3;

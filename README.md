@@ -105,7 +105,17 @@ And load script like below.
 ###4. Write JavaScript
 
 ```javascript
-SpSlidemenu('#main', '.slidemenu', '.menu-button', {direction: 'left'});
+SpSlidemenu({
+   main               : "#main",
+   button             : ".menu-button",
+   slidemenu          : ".slidemenu",
+   slidemenu_header   : ".slidemenu-header",
+   slidemenu_body     : ".slidemenu-body",
+   slidemenu_content  : ".slidemenu-content",
+   disableCssAnimation: false,
+   disable3d          : false,
+   direction          : 'left'
+});
 ```
 
 ###DOM Figure
@@ -124,7 +134,7 @@ SpSlidemenu('#main', '.slidemenu', '.menu-button', {direction: 'left'});
 ###Function
 
 ```
-SpSlidemenu(main, slidemenu, button, options)
+SpSlidemenu(options)
 ```
 
 * main : Required. HTMLElement or String(CSS Selector)
@@ -137,7 +147,17 @@ SpSlidemenu(main, slidemenu, button, options)
 **exmaple**  
 
 ```javascript
-var sp_slidemenu = SpSlidemenu('#main', '.slidemenu', '.menu-button', {direction: 'left'});
+var sp_slidemenu = SpSlidemenu({
+   main               : "#main",
+   button             : ".menu-button",
+   slidemenu          : ".slidemenu",
+   slidemenu_header   : ".slidemenu-header",
+   slidemenu_body     : ".slidemenu-body",
+   slidemenu_content  : ".slidemenu-content",
+   disableCssAnimation: false,
+   disable3d          : false,
+   direction          : 'left'
+});
 ```
 
 ###Option
@@ -153,7 +173,17 @@ direction | String | left | left or right.
 Open slidemenu.
 
 ```javascript
-var sp_slidemenu = SpSlidemenu('#main', '.slidemenu', '.menu-button', {direction: 'left'});
+var sp_slidemenu = SpSlidemenu({
+   main               : "#main",
+   button             : ".menu-button",
+   slidemenu          : ".slidemenu",
+   slidemenu_header   : ".slidemenu-header",
+   slidemenu_body     : ".slidemenu-body",
+   slidemenu_content  : ".slidemenu-content",
+   disableCssAnimation: false,
+   disable3d          : false,
+   direction          : 'left'
+});
 sp_slidemenu.slideOpen();
 ```
 
@@ -161,7 +191,17 @@ sp_slidemenu.slideOpen();
 Close slidemenu.
 
 ```javascript
-var sp_slidemenu = SpSlidemenu('#main', '.slidemenu', '.menu-button', {direction: 'left'});
+var sp_slidemenu = SpSlidemenu({
+   main               : "#main",
+   button             : ".menu-button",
+   slidemenu          : ".slidemenu",
+   slidemenu_header   : ".slidemenu-header",
+   slidemenu_body     : ".slidemenu-body",
+   slidemenu_content  : ".slidemenu-content",
+   disableCssAnimation: false,
+   disable3d          : false,
+   direction          : 'left'
+});
 sp_slidemenu.slideClose();
 ```
 

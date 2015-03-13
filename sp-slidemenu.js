@@ -348,18 +348,20 @@ SpSlidemenu.prototype.buttonTouchEnd = function(event) {
     event.stopPropagation();
 
     if (_this.shouldTrigerNext(event)) {
-        for (var i = _this.main.length; i--; ) {
+        setTimeout(function() {
+          for (var i = _this.main.length; i--; ) {
             switch(_this.main[i].SpSlidemenuStatus) {
-            case SLIDE_STATUS.progress:
+              case SLIDE_STATUS.progress:
                 break;
-            case SLIDE_STATUS.open:
+              case SLIDE_STATUS.open:
                 _this.slideClose(event);
                 break;
-            case SLIDE_STATUS.close:
+              case SLIDE_STATUS.close:
                 _this.slideOpen(event);
                 break;
+                }
             }
-        }
+        }, 100);
     }
 };
 

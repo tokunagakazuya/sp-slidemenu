@@ -175,10 +175,7 @@ SpSlidemenu.prototype.init = function(options) {
 
     _this.disableCssAnimation = (options.disableCssAnimation === undefined) ? false : options.disableCssAnimation;
     //Android 2.3 is true the disable3d
-    _this.disable3d = (function () {
-        var ua = navigator.userAgent;
-        return ua.indexOf("Android") > -1 && parseFloat(ua.slice(ua.indexOf("Android")+8)) <= 2.3;
-    }()) ? true : (options.disable3d === undefined) ? false : options.disable3d;
+    _this.disable3d = hasAndroidMaxVersion(2.3) ? true : (options.disable3d === undefined) ? false : options.disable3d;
     _this.direction = 'left';
     if (options.direction === 'right') {
         _this.direction = 'right';
@@ -272,13 +269,19 @@ SpSlidemenu.prototype.setDefaultStyle = function() {
     _this.setHeight();
     if (_this.useCssAnimation) {
         for (var i = _this.main.length; i--; ) {
-            setStyles(_this.main[i], {
-                transitionProperty: getCSSName('transform'),
-                transitionTimingFunction: 'ease-in-out',
-                transitionDuration: ANIME_SPEED.slider + 'ms',
-                transitionDelay: '0ms',
-                transform: _this.getTranslateX(0)
-            });
+            if(hasAndroidMaxVersion(2.3) && hasPositionFixed(_this.main[i])) {
+                setStyles(_this.main[i], {
+                    left: '0px'
+                });
+            } else {
+                setStyles(_this.main[i], {
+                    transitionProperty: getCSSName('transform'),
+                    transitionTimingFunction: 'ease-in-out',
+                    transitionDuration: ANIME_SPEED.slider + 'ms',
+                    transitionDelay: '0ms',
+                    transform: _this.getTranslateX(0)
+                });
+            }
         }
         setStyles(_this.slidemenu, {
             transitionProperty: 'visibility',
@@ -297,7 +300,6 @@ SpSlidemenu.prototype.setDefaultStyle = function() {
     } else {
         for (var i = _this.main.length; i--; ) {
             setStyles(_this.main[i], {
-                position: 'relative',
                 left: '0px'
             });
         }
@@ -401,9 +403,13 @@ SpSlidemenu.prototype.slideOpen = function(event) {
     document.documentElement.style['overflowX'] = document.body.style['overflowX'] = 'hidden';
     if (_this.useCssAnimation) {
         for (var i = _this.main.length; i--; ) {
-            setStyles(_this.main[i], {
-                transform: _this.getTranslateX(toX)
-            });
+            if(hasAndroidMaxVersion(2.3) && hasPositionFixed(_this.main[i])) {
+                animate(_this.main[i], _this.direction, toX, ANIME_SPEED.slider);
+            } else {
+                setStyles(_this.main[i], {
+                    transform: _this.getTranslateX(toX)
+                });
+            }
         }
         setStyles(_this.slidemenu, {
             transitionProperty: 'z-index',
@@ -465,9 +471,13 @@ SpSlidemenu.prototype.slideClose = function(event) {
 
         setTimeout( function() {
           for (var i = _this.main.length; i--; ) {
-            setStyles(_this.main[i], {
-              transform: _this.getTranslateX(0)
-            });
+            if(hasAndroidMaxVersion(2.3) && hasPositionFixed(_this.main[i])) {
+              animate(_this.main[i], _this.direction, 0, ANIME_SPEED.slider);
+            } else {
+              setStyles(_this.main[i], {
+                transform: _this.getTranslateX(0)
+              });
+            }
           }
         }, 50);
     } else {
@@ -1012,6 +1022,13 @@ function debounce(func, wait, immediate) {
         if (callNow) result = func.apply(context, args);
         return result;
     };
+}
+function hasAndroidMaxVersion(version) {
+    var ua = navigator.userAgent;
+    return ua.indexOf("Android") > -1 && parseFloat(ua.slice(ua.indexOf("Android")+8)) <= version;
+}
+function hasPositionFixed(elem) {
+    return window.getComputedStyle(elem, '').position === 'fixed'
 }
 
 window.SpSlidemenu = SpSlidemenu;

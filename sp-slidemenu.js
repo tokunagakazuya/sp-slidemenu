@@ -255,9 +255,9 @@ SpSlidemenu.prototype.setElement = function(options) {
     _this._mainBody = document.querySelector(_main[0]);
     _this.slidemenu = document.querySelector(options.slidemenu);
     _this.button = document.querySelector(options.button);
-    _this.slidemenuBody = document.querySelector(options.slidemenu_body);
-    _this.slidemenuContent = document.querySelector(options.slidemenu_content);
-    _this.slidemenuHeader = document.querySelector(options.slidemenu_header);
+    _this.slidemenuBody = _this.slidemenu.querySelector(options.slidemenu_body);
+    _this.slidemenuContent = _this.slidemenu.querySelector(options.slidemenu_content);
+    _this.slidemenuHeader = _this.slidemenu.querySelector(options.slidemenu_header);
 };
 
 SpSlidemenu.prototype.setDefaultStyle = function() {
@@ -468,7 +468,7 @@ SpSlidemenu.prototype.slideClose = function(event) {
         setStyles(_this.slidemenu, {
             transitionProperty: 'visibility',
             visibility: 'hidden',
-            zIndex: '-1',
+            zIndex: '-1'
         });
 
         setTimeout( function() {

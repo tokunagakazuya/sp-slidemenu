@@ -347,6 +347,8 @@ SpSlidemenu.prototype.buttonTouchEnd = function(event) {
     event.preventDefault();
     event.stopPropagation();
 
+    _this.setHeight();
+
     if (_this.shouldTrigerNext(event)) {
         setTimeout(function() {
           for (var i = _this.main.length; i--; ) {

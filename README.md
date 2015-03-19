@@ -78,9 +78,6 @@ And load script like below.
 ###3. Write CSS
 
 ```css
-#main {
-  z-index: 1;
-}
 .slidemenu {
   top: 0;
   left: 0;

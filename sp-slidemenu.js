@@ -408,7 +408,9 @@ SpSlidemenu.prototype.slideOpen = function(event) {
     if (_this.useCssAnimation) {
         for (var i = _this.main.length; i--; ) {
             if(hasAndroidMaxVersion(2.3) && hasPositionFixed(_this.main[i])) {
-                animate(_this.main[i], _this.direction, toX, ANIME_SPEED.slider);
+                _this.main[i].style['left']  = '';
+                _this.main[i].style['right'] = '';
+                animate(_this.main[i], _this.direction, Math.abs(toX), ANIME_SPEED.slider);
             } else {
                 setStyles(_this.main[i], {
                     transform: _this.getTranslateX(toX)
@@ -422,7 +424,9 @@ SpSlidemenu.prototype.slideOpen = function(event) {
         });
     } else {
         for (var i = _this.main.length; i--; ) {
-            animate(_this.main[i], _this.direction, toX, ANIME_SPEED.slider);
+            _this.main[i].style['left']  = '';
+            _this.main[i].style['right'] = '';
+            animate(_this.main[i], _this.direction, Math.abs(toX), ANIME_SPEED.slider);
         }
         setStyles(_this.slidemenu, {
             visibility: 'visible'

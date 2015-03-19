@@ -10,7 +10,7 @@ So, I do not have to fix the bug yet.
 ##About
 sp-slidemenu.js is a JavaScript library that provides UI of slide menu.
 
-See [demo](http://be-hase.com.s3.amazonaws.com/static/sp-slidemenu/sample/demo1.html)
+See [demo](http://tokunagakazuya.github.io/sp-slidemenu/sample/demo1.html)
 
 ##Support browser
 * Mobile
@@ -78,9 +78,6 @@ And load script like below.
 ###3. Write CSS
 
 ```css
-#main {
-  z-index: 1;
-}
 .slidemenu {
   top: 0;
   left: 0;
@@ -105,7 +102,17 @@ And load script like below.
 ###4. Write JavaScript
 
 ```javascript
-SpSlidemenu('#main', '.slidemenu', '.menu-button', {direction: 'left'});
+SpSlidemenu({
+   main               : "#main",
+   button             : ".menu-button",
+   slidemenu          : ".slidemenu",
+   slidemenu_header   : ".slidemenu-header",
+   slidemenu_body     : ".slidemenu-body",
+   slidemenu_content  : ".slidemenu-content",
+   disableCssAnimation: false,
+   disable3d          : false,
+   direction          : 'left'
+});
 ```
 
 ###DOM Figure
@@ -124,7 +131,7 @@ SpSlidemenu('#main', '.slidemenu', '.menu-button', {direction: 'left'});
 ###Function
 
 ```
-SpSlidemenu(main, slidemenu, button, options)
+SpSlidemenu(options)
 ```
 
 * main : Required. HTMLElement or String(CSS Selector)
@@ -137,7 +144,17 @@ SpSlidemenu(main, slidemenu, button, options)
 **exmaple**  
 
 ```javascript
-var sp_slidemenu = SpSlidemenu('#main', '.slidemenu', '.menu-button', {direction: 'left'});
+var sp_slidemenu = SpSlidemenu({
+   main               : "#main",
+   button             : ".menu-button",
+   slidemenu          : ".slidemenu",
+   slidemenu_header   : ".slidemenu-header",
+   slidemenu_body     : ".slidemenu-body",
+   slidemenu_content  : ".slidemenu-content",
+   disableCssAnimation: false,
+   disable3d          : false,
+   direction          : 'left'
+});
 ```
 
 ###Option
@@ -153,7 +170,17 @@ direction | String | left | left or right.
 Open slidemenu.
 
 ```javascript
-var sp_slidemenu = SpSlidemenu('#main', '.slidemenu', '.menu-button', {direction: 'left'});
+var sp_slidemenu = SpSlidemenu({
+   main               : "#main",
+   button             : ".menu-button",
+   slidemenu          : ".slidemenu",
+   slidemenu_header   : ".slidemenu-header",
+   slidemenu_body     : ".slidemenu-body",
+   slidemenu_content  : ".slidemenu-content",
+   disableCssAnimation: false,
+   disable3d          : false,
+   direction          : 'left'
+});
 sp_slidemenu.slideOpen();
 ```
 
@@ -161,11 +188,21 @@ sp_slidemenu.slideOpen();
 Close slidemenu.
 
 ```javascript
-var sp_slidemenu = SpSlidemenu('#main', '.slidemenu', '.menu-button', {direction: 'left'});
+var sp_slidemenu = SpSlidemenu({
+   main               : "#main",
+   button             : ".menu-button",
+   slidemenu          : ".slidemenu",
+   slidemenu_header   : ".slidemenu-header",
+   slidemenu_body     : ".slidemenu-body",
+   slidemenu_content  : ".slidemenu-content",
+   disableCssAnimation: false,
+   disable3d          : false,
+   direction          : 'left'
+});
 sp_slidemenu.slideClose();
 ```
 
 
 ##Demo & Sample
 
-Demo : [Click here!](http://be-hase.com.s3.amazonaws.com/static/sp-slidemenu/sample/demo1.html)
+Demo : [Click here!](http://tokunagakazuya.github.io/sp-slidemenu/sample/demo1.html)

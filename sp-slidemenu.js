@@ -1,7 +1,7 @@
 /**
  * sp-slidemenu.js
  *
- * @version  0.1.0
+ * @version  0.1.2
  * @url https://github.com/be-hase/sp-slidemenu
  *
  * Copyright 2013 be-hase.com.
@@ -67,6 +67,8 @@ defaults = {
     slidemenu_header   : ".slidemenu-header",
     slidemenu_body     : ".slidemenu-body",
     slidemenu_content  : ".slidemenu-content",
+    disableCssAnimation: false,
+    disable3d          : false,
     direction          : 'left'
 };
 
@@ -159,13 +161,21 @@ SpSlidemenu.prototype.init = function(options) {
     }
 
     // find and set element.
-    _this.setElement(options);
+    _this.setElement({
+        main              : options.main,
+        slidemenu         : options.slidemenu,
+        button            : options.button,
+        slidemenu_body    : options.slidemenu_body,
+        slidemenu_content : options.slidemenu_content,
+        slidemenu_header  : options.slidemenu_header
+    });
     if (!_this.main || !_this.slidemenu || !_this.button || !_this.slidemenuBody || !_this.slidemenuContent) {
         throw new Error('Element not found. Please set correctly.');
     }
 
     _this.disableCssAnimation = (options.disableCssAnimation === undefined) ? false : options.disableCssAnimation;
-    _this.disable3d = (options.disable3d === undefined) ? false : options.disable3d;
+    //Android 2.3 is true the disable3d
+    _this.disable3d = hasAndroidMaxVersion(2.3) ? true : (options.disable3d === undefined) ? false : options.disable3d;
     _this.direction = 'left';
     if (options.direction === 'right') {
         _this.direction = 'right';
@@ -183,7 +193,9 @@ SpSlidemenu.prototype.init = function(options) {
 
     // slide
     _this.slideWidth = (getDimentions(_this.slidemenu)).width;
-    _this.main.SpSlidemenuStatus = SLIDE_STATUS.close;
+    for (var i = _this.main.length; i--; ) {
+        _this.main[i].SpSlidemenuStatus = SLIDE_STATUS.close;
+    }
     _this.htmlOverflowX = '';
     _this.bodyOverflowX = '';
 
@@ -229,7 +241,9 @@ SpSlidemenu.prototype.bindMethods = function() {
 };
 
 SpSlidemenu.prototype.setElement = function(options) {
-    var _this = this;
+    var _this, _main;
+    _this = this;
+    _main = options.main.split(",");
 
     for(var k in options) {
       if (typeof options[k] !== "string") {
@@ -237,12 +251,13 @@ SpSlidemenu.prototype.setElement = function(options) {
       }
     }
 
-    _this.main = document.querySelector(options.main);
+    _this.main = document.querySelectorAll(options.main);
+    _this._mainBody = document.querySelector(_main[0]);
     _this.slidemenu = document.querySelector(options.slidemenu);
     _this.button = document.querySelector(options.button);
-    _this.slidemenuBody = document.querySelector(options.slidemenu_body);
-    _this.slidemenuContent = document.querySelector(options.slidemenu_content);
-    _this.slidemenuHeader = document.querySelector(options.slidemenu_header);
+    _this.slidemenuBody = _this.slidemenu.querySelector(options.slidemenu_body);
+    _this.slidemenuContent = _this.slidemenu.querySelector(options.slidemenu_content);
+    _this.slidemenuHeader = _this.slidemenu.querySelector(options.slidemenu_header);
 };
 
 SpSlidemenu.prototype.setDefaultStyle = function() {
@@ -253,18 +268,27 @@ SpSlidemenu.prototype.setDefaultStyle = function() {
     }
     _this.setHeight();
     if (_this.useCssAnimation) {
-        setStyles(_this.main, {
-            transitionProperty: getCSSName('transform'),
-            transitionTimingFunction: 'ease-in-out',
-            transitionDuration: ANIME_SPEED.slider + 'ms',
-            transitionDelay: '0ms',
-            transform: _this.getTranslateX(0)
-        });
+        for (var i = _this.main.length; i--; ) {
+            if(hasAndroidMaxVersion(2.3) && hasPositionFixed(_this.main[i])) {
+                setStyles(_this.main[i], {
+                    left: '0px'
+                });
+            } else {
+                setStyles(_this.main[i], {
+                    transitionProperty: getCSSName('transform'),
+                    transitionTimingFunction: 'ease-in-out',
+                    transitionDuration: ANIME_SPEED.slider + 'ms',
+                    transitionDelay: '0ms',
+                    transform: _this.getTranslateX(0)
+                });
+            }
+        }
         setStyles(_this.slidemenu, {
             transitionProperty: 'visibility',
             transitionTimingFunction: 'linear',
             transitionDuration: '0ms',
-            transitionDelay: ANIME_SPEED.slider + 'ms'
+            transitionDelay: ANIME_SPEED.slider + 'ms',
+            transform: 'translateZ(0)'
         });
         setStyles(_this.slidemenuContent, {
             transitionProperty: getCSSName('transform'),
@@ -274,10 +298,11 @@ SpSlidemenu.prototype.setDefaultStyle = function() {
             transform: _this.getTranslateY(0)
         });
     } else {
-        setStyles(_this.main, {
-            position: 'relative',
-            left: '0px'
-        });
+        for (var i = _this.main.length; i--; ) {
+            setStyles(_this.main[i], {
+                left: '0px'
+            });
+        }
         setStyles(_this.slidemenuContent, {
             top: '0px'
         });
@@ -289,7 +314,7 @@ SpSlidemenu.prototype.setHeight = function(event) {
     _this = this;
     browserHeight = getBrowserHeight();
 
-    setStyles(_this.main, {
+    setStyles(_this._mainBody, {
         minHeight: browserHeight + 'px'
     });
     setStyles(_this.slidemenu, {
@@ -303,14 +328,16 @@ SpSlidemenu.prototype.buttonTouchStart = function(event) {
     event.preventDefault();
     event.stopPropagation();
 
-    switch(_this.main.SpSlidemenuStatus) {
-    case SLIDE_STATUS.progress:
-        break;
-    case SLIDE_STATUS.open:
-    case SLIDE_STATUS.close:
-        _this.buttonStartPageX = getPage(event, 'pageX');
-        _this.buttonStartPageY = getPage(event, 'pageY');
-        break;
+    for (var i = _this.main.length; i--; ) {
+        switch(_this.main[i].SpSlidemenuStatus) {
+        case SLIDE_STATUS.progress:
+            break;
+        case SLIDE_STATUS.open:
+        case SLIDE_STATUS.close:
+            _this.buttonStartPageX = getPage(event, 'pageX');
+            _this.buttonStartPageY = getPage(event, 'pageY');
+            break;
+        }
     }
 };
 
@@ -320,17 +347,23 @@ SpSlidemenu.prototype.buttonTouchEnd = function(event) {
     event.preventDefault();
     event.stopPropagation();
 
+    _this.setHeight();
+
     if (_this.shouldTrigerNext(event)) {
-        switch(_this.main.SpSlidemenuStatus) {
-        case SLIDE_STATUS.progress:
-            break;
-        case SLIDE_STATUS.open:
-            _this.slideClose(event);
-            break;
-        case SLIDE_STATUS.close:
-            _this.slideOpen(event);
-            break;
-        }
+        setTimeout(function() {
+          for (var i = _this.main.length; i--; ) {
+            switch(_this.main[i].SpSlidemenuStatus) {
+              case SLIDE_STATUS.progress:
+                break;
+              case SLIDE_STATUS.open:
+                _this.slideClose(event);
+                break;
+              case SLIDE_STATUS.close:
+                _this.slideOpen(event);
+                break;
+                }
+            }
+        }, 100);
     }
 };
 
@@ -361,7 +394,9 @@ SpSlidemenu.prototype.slideOpen = function(event) {
     } else {
         toX = -_this.slideWidth;
     }
-    _this.main.SpSlidemenuStatus = SLIDE_STATUS.progress;
+    for (var i = _this.main.length; i--; ) {
+        _this.main[i].SpSlidemenuStatus = SLIDE_STATUS.progress;
+    }
 
     //set event
     addTouchEvent('move', document, blockEvent, false);
@@ -371,16 +406,28 @@ SpSlidemenu.prototype.slideOpen = function(event) {
     _this.bodyOverflowX = document.body.style['overflowX'];
     document.documentElement.style['overflowX'] = document.body.style['overflowX'] = 'hidden';
     if (_this.useCssAnimation) {
-        setStyles(_this.main, {
-            transform: _this.getTranslateX(toX)
-        });
+        for (var i = _this.main.length; i--; ) {
+            if(hasAndroidMaxVersion(2.3) && hasPositionFixed(_this.main[i])) {
+                _this.main[i].style['left']  = '';
+                _this.main[i].style['right'] = '';
+                animate(_this.main[i], _this.direction, Math.abs(toX), ANIME_SPEED.slider);
+            } else {
+                setStyles(_this.main[i], {
+                    transform: _this.getTranslateX(toX)
+                });
+            }
+        }
         setStyles(_this.slidemenu, {
             transitionProperty: 'z-index',
             visibility: 'visible',
             zIndex: '1'
         });
     } else {
-        animate(_this.main, _this.direction, toX, ANIME_SPEED.slider);
+        for (var i = _this.main.length; i--; ) {
+            _this.main[i].style['left']  = '';
+            _this.main[i].style['right'] = '';
+            animate(_this.main[i], _this.direction, Math.abs(toX), ANIME_SPEED.slider);
+        }
         setStyles(_this.slidemenu, {
             visibility: 'visible'
         });
@@ -392,7 +439,9 @@ SpSlidemenu.prototype.slideOpen = function(event) {
 SpSlidemenu.prototype.slideOpenEnd = function() {
     var _this = this;
 
-    _this.main.SpSlidemenuStatus = SLIDE_STATUS.open;
+    for (var i = _this.main.length; i--; ) {
+        _this.main[i].SpSlidemenuStatus = SLIDE_STATUS.open;
+    }
 
     // change style
     if (_this.useCssAnimation) {
@@ -403,16 +452,22 @@ SpSlidemenu.prototype.slideOpenEnd = function() {
     }
 
     // add event
-    addTouchEvent('start', _this.main, _this.mainTouchStart, false);
+    for (var i = _this.main.length; i--; ) {
+        addTouchEvent('start', _this.main[i], _this.mainTouchStart, false);
+    }
 };
 
 SpSlidemenu.prototype.slideClose = function(event) {
     var _this = this;
 
-    _this.main.SpSlidemenuStatus = SLIDE_STATUS.progress;
+    for (var i = _this.main.length; i--; ) {
+        _this.main[i].SpSlidemenuStatus = SLIDE_STATUS.progress;
+    }
 
     //event
-    removeTouchEvent('start', _this.main, _this.mainTouchStart, false);
+    for (var i = _this.main.length; i--; ) {
+        removeTouchEvent('start', _this.main[i], _this.mainTouchStart, false);
+    }
 
     // change style
     if (_this.useCssAnimation) {
@@ -423,12 +478,20 @@ SpSlidemenu.prototype.slideClose = function(event) {
         });
 
         setTimeout( function() {
-          setStyles(_this.main, {
-              transform: _this.getTranslateX(0)
-          });
+          for (var i = _this.main.length; i--; ) {
+            if(hasAndroidMaxVersion(2.3) && hasPositionFixed(_this.main[i])) {
+              animate(_this.main[i], _this.direction, 0, ANIME_SPEED.slider);
+            } else {
+              setStyles(_this.main[i], {
+                transform: _this.getTranslateX(0)
+              });
+            }
+          }
         }, 50);
     } else {
-        animate(_this.main, _this.direction, 0, ANIME_SPEED.slider);
+        for (var i = _this.main.length; i--; ) {
+            animate(_this.main[i], _this.direction, 0, ANIME_SPEED.slider);
+        }
         setStyles(_this.slidemenu, {
             zIndex: '-1'
         });
@@ -440,7 +503,9 @@ SpSlidemenu.prototype.slideClose = function(event) {
 SpSlidemenu.prototype.slideCloseEnd = function() {
     var _this = this;
 
-    _this.main.SpSlidemenuStatus = SLIDE_STATUS.close;
+    for (var i = _this.main.length; i--; ) {
+        _this.main[i].SpSlidemenuStatus = SLIDE_STATUS.close;
+    }
 
     // change style
     document.documentElement.style['overflowX'] = _this.htmlOverflowX;
@@ -965,6 +1030,13 @@ function debounce(func, wait, immediate) {
         if (callNow) result = func.apply(context, args);
         return result;
     };
+}
+function hasAndroidMaxVersion(version) {
+    var ua = navigator.userAgent;
+    return ua.indexOf("Android") > -1 && parseFloat(ua.slice(ua.indexOf("Android")+8)) <= version;
+}
+function hasPositionFixed(elem) {
+    return window.getComputedStyle(elem, '').position === 'fixed'
 }
 
 window.SpSlidemenu = SpSlidemenu;

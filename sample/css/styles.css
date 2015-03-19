@@ -113,9 +113,6 @@ nav ul {
 }
 
 /*plugin*/
-#main {
-  z-index: 1;
-}
 .slidemenu {
   top: 0;
   width: 240px;

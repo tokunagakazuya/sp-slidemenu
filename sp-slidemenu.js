@@ -41,6 +41,7 @@ support.transition = hasProp([
     'msTransitionProperty'
 ]);
 support.addEventListener = 'addEventListener' in window;
+support.attachEvent = 'attachEvent' in window;
 support.msPointer = window.navigator.msPointerEnabled;
 support.cssAnimation = (support.transform3d || support.transform) && support.transition;
 support.touch = 'ontouchend' in window;
@@ -217,9 +218,13 @@ SpSlidemenu.prototype.init = function(options) {
     addTouchEvent('start', _this.slidemenuContent, _this.scrollTouchStart, false);
     addTouchEvent('move', _this.slidemenuContent, _this.scrollTouchMove, false);
     addTouchEvent('end', _this.slidemenuContent, _this.scrollTouchEnd, false);
-    _this.slidemenuContent.addEventListener('click', _this.itemClick, false);
-    // window size change
-    window.addEventListener('resize', debounce(_this.setHeight, 100), false);
+    if(support.addEventListener) {
+        _this.slidemenuContent.addEventListener('click', _this.itemClick, false);
+        window.addEventListener('resize', debounce(_this.setHeight, 100), false);
+    } else if(support.attachEvent){
+        _this.slidemenuContent.attachEvent('onclick', _this.itemClick);
+        window.attachEvent('onresize', debounce(_this.setHeight, 100));
+    }
 
     return _this;
 };
@@ -325,8 +330,8 @@ SpSlidemenu.prototype.setHeight = function(event) {
 SpSlidemenu.prototype.buttonTouchStart = function(event) {
     var _this = this;
 
-    event.preventDefault();
-    event.stopPropagation();
+    event.preventDefault ? event.preventDefault() : event.returnValue = false;
+    event.stopPropagation? event.stopPropagation(): event.cancelBubble = true;
 
     for (var i = _this.main.length; i--; ) {
         switch(_this.main[i].SpSlidemenuStatus) {
@@ -344,8 +349,8 @@ SpSlidemenu.prototype.buttonTouchStart = function(event) {
 SpSlidemenu.prototype.buttonTouchEnd = function(event) {
     var _this = this;
 
-    event.preventDefault();
-    event.stopPropagation();
+    event.preventDefault ? event.preventDefault() : event.returnValue = false;
+    event.stopPropagation? event.stopPropagation(): event.cancelBubble = true;
 
     _this.setHeight();
 
@@ -370,8 +375,8 @@ SpSlidemenu.prototype.buttonTouchEnd = function(event) {
 SpSlidemenu.prototype.mainTouchStart = function(event) {
     var _this = this;
 
-    event.preventDefault();
-    event.stopPropagation();
+    event.preventDefault ? event.preventDefault() : event.returnValue = false;
+    event.stopPropagation? event.stopPropagation(): event.cancelBubble = true;
 
     _this.slideClose(event);
 };
@@ -558,7 +563,11 @@ SpSlidemenu.prototype.scrollTouchStart = function(event) {
     _this.scrollTimeForVelocity = event.timeStamp;
     _this.scrollPageYForVelocity = _this.scrollStartPageY;
 
-    _this.slidemenuContent.removeEventListener('click', blockEvent, true);
+    if(support.addEventListener) {
+        _this.slidemenuContent.removeEventListener('click', blockEvent, true);
+    } else if(support.attachEvent){
+        _this.slidemenuContent.detachEvent('onclick', blockEvent);
+    }
 };
 
 SpSlidemenu.prototype.scrollTouchMove = function(event) {
@@ -573,8 +582,8 @@ SpSlidemenu.prototype.scrollTouchMove = function(event) {
     pageY = getPage(event, 'pageY');
 
     if (_this.scrollMoveReady) {
-        event.preventDefault();
-        event.stopPropagation();
+        event.preventDefault ? event.preventDefault() : event.returnValue = false;
+        event.stopPropagation? event.stopPropagation(): event.cancelBubble = true;
         distY = pageY - _this.scrollBasePageY;
         newY = _this.scrollCurrentY + distY;
         if (newY > 0 || newY < _this.scrollMaxY) {
@@ -592,7 +601,11 @@ SpSlidemenu.prototype.scrollTouchMove = function(event) {
         deltaY = Math.abs(pageY - _this.scrollStartPageY);
         if (deltaX > 5 || deltaY > 5) {
             _this.scrollMoveReady = true;
-            _this.slidemenuContent.addEventListener('click', blockEvent, true);
+            if(support.addEventListener) {
+                _this.slidemenuContent.addEventListener('click', blockEvent, true);
+            } else if(support.attachEvent){
+                _this.slidemenuContent.attachEvent('onclick', blockEvent);
+            }
         }
     }
 
@@ -922,8 +935,8 @@ function bind(func, context) {
     };
 }
 function blockEvent(event) {
-    event.preventDefault();
-    event.stopPropagation();
+    event.preventDefault ? event.preventDefault() : event.returnValue = false;
+    event.stopPropagation? event.stopPropagation(): event.cancelBubble = true;
 }
 function getDimentions(element) {
     var previous, key, properties, result;
@@ -959,7 +972,11 @@ function addTouchEvent(eventType, element, listener, useCapture) {
     if (support.touch) {
         element.addEventListener(EVENTS[eventType].touch, listener, useCapture);
     } else {
-        element.addEventListener(EVENTS[eventType].mouse, listener, useCapture);
+        if(support.addEventListener) {
+            element.addEventListener(EVENTS[eventType].mouse, listener, useCapture);
+        } else if(support.attachEvent){
+            element.attachEvent('on'+EVENTS[eventType].mouse, listener);
+        }
     }
 }
 function removeTouchEvent(eventType, element, listener, useCapture) {
@@ -968,7 +985,11 @@ function removeTouchEvent(eventType, element, listener, useCapture) {
     if (support.touch) {
         element.removeEventListener(EVENTS[eventType].touch, listener, useCapture);
     } else {
-        element.removeEventListener(EVENTS[eventType].mouse, listener, useCapture);
+        if(support.addEventListener) {
+            element.removeEventListener(EVENTS[eventType].mouse, listener, useCapture);
+        } else if(support.attachEvent){
+            element.detachEvent('on'+EVENTS[eventType].mouse, listener);
+        }
     }
 }
 function hasClass(elem, className) {

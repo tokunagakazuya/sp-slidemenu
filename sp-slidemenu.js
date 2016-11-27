@@ -216,9 +216,11 @@ SpSlidemenu.prototype.init = function(options) {
     _this.bindMethods();
 
     // add event
-    addTouchEvent('start', _this.button, _this.buttonTouchStart, false);
-    addTouchEvent('move', _this.button, blockEvent, false);
-    addTouchEvent('end', _this.button, _this.buttonTouchEnd, false);
+    for (i = _this.button.length; i--; ) {
+        addTouchEvent('start', _this.button[i], _this.buttonTouchStart, false);
+        addTouchEvent('move', _this.button[i], blockEvent, false);
+        addTouchEvent('end', _this.button[i], _this.buttonTouchEnd, false);
+    }
     addTouchEvent('start', _this.slidemenuContent, _this.scrollTouchStart, false);
     addTouchEvent('move', _this.slidemenuContent, _this.scrollTouchMove, false);
     addTouchEvent('end', _this.slidemenuContent, _this.scrollTouchEnd, false);
@@ -265,7 +267,7 @@ SpSlidemenu.prototype.setElement = function(options) {
     _this.main = document.querySelectorAll(options.main);
     _this._mainBody = document.querySelector(_main[0]);
     _this.slidemenu = document.querySelector(options.slidemenu);
-    _this.button = document.querySelector(options.button);
+    _this.button = document.querySelectorAll(options.button);
     _this.slidemenuBody = _this.slidemenu.querySelector(options.slidemenu_body);
     _this.slidemenuContent = _this.slidemenu.querySelector(options.slidemenu_content);
     _this.slidemenuHeader = _this.slidemenu.querySelector(options.slidemenu_header);

@@ -206,37 +206,37 @@ sp_slidemenu.slideClose();
 
 ```javascript
 $(document).on('buttonTouchStart-spSlidermenu', function () {
-  console.log('Ssp-slidemenu is buttonTouchStart');
+  console.log('sp-slidemenu is buttonTouchStart');
 });
 $(document).on('buttonTouchEnd-spSlidermenu', function () {
-  console.log('Ssp-slidemenu is buttonTouchEnd');
+  console.log('sp-slidemenu is buttonTouchEnd');
 });
 $(document).on('slideOpen-spSlidermenu', function () {
-  console.log('Ssp-slidemenu is slideOpen');
+  console.log('sp-slidemenu is slideOpen');
 });
 $(document).on('slideOpenEnd-spSlidermenu', function () {
-  console.log('Ssp-slidemenu is slideOpenEnd');
+  console.log('sp-slidemenu is slideOpenEnd');
 });
 $(document).on('slideClose-spSlidermenu', function () {
-  console.log('Ssp-slidemenu is slideClose');
+  console.log('sp-slidemenu is slideClose');
 });
 $(document).on('slideClose-spSlidermenu', function () {
-  console.log('Ssp-slidemenu is slideClose');
+  console.log('sp-slidemenu is slideClose');
 });
 $(document).on('slideCloseEnd-spSlidermenu', function () {
-  console.log('Ssp-slidemenu is slideCloseEnd');
+  console.log('sp-slidemenu is slideCloseEnd');
 });
 $(document).on('scrollTouchStart-spSlidermenu', function () {
-  console.log('Ssp-slidemenu is scrollTouchStart');
+  console.log('sp-slidemenu is scrollTouchStart');
 });
 $(document).on('scrollTouchMove-spSlidermenu', function () {
-  console.log('Ssp-slidemenu is scrollTouchMove');
+  console.log('sp-slidemenu is scrollTouchMove');
 });
 $(document).on('scrollWheel-spSlidermenu', function () {
-  console.log('Ssp-slidemenu is scrollWheel');
+  console.log('sp-slidemenu is scrollWheel');
 });
 $(document).on('scrollTouchEnd-spSlidermenu', function () {
-  console.log('Ssp-slidemenu is scrollTouchEnd');
+  console.log('sp-slidemenu is scrollTouchEnd');
 });
 ```
 

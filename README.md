@@ -7,12 +7,12 @@ I am sorry.
 I ended up selling the old Android device. Therefore, I will not be able to reproduce the bug. 
 So, I do not have to fix the bug yet.
 
-##About
+## About
 sp-slidemenu.js is a JavaScript library that provides UI of slide menu.
 
 See [demo](http://tokunagakazuya.github.io/sp-slidemenu/sample/demo1.html)
 
-##Support browser
+## Support browser
 * Mobile
   - iOS Safari (iOS4+)
   - Android Browser (Android 2.2+)
@@ -26,9 +26,9 @@ See [demo](http://tokunagakazuya.github.io/sp-slidemenu/sample/demo1.html)
   - Firefox
   - Safari
   
-##Getting Started
+## Getting Started
 
-###1. Download and load.
+### 1. Download and load.
 Download code.  
 And load script like below.  
 
@@ -38,7 +38,7 @@ And load script like below.
 
 *sp-slidemenu.js is not dependent other library.
 
-###2. Write HTML
+### 2. Write HTML
 
 ```
 <body>
@@ -75,7 +75,7 @@ And load script like below.
 * "#main" element : Required. Bad you can use your favorite selector.  
 * ".menu-button" element : Required. Bad you can use your favorite selector. When Clicked, toggle(open or close) slidemenu. 
 
-###3. Write CSS
+### 3. Write CSS
 
 ```css
 .slidemenu {
@@ -99,7 +99,7 @@ And load script like below.
 }
 ```
 
-###4. Write JavaScript
+### 4. Write JavaScript
 
 ```javascript
 SpSlidemenu({
@@ -115,7 +115,7 @@ SpSlidemenu({
 });
 ```
 
-###DOM Figure
+### DOM Figure
 
 * **close**
 
@@ -126,9 +126,9 @@ SpSlidemenu({
 ![image1](http://be-hase.com.s3.amazonaws.com/static/img/SpSlidemenu/image2.png)
 
 
-##Document
+## Document
 
-###Function
+### Function
 
 ```
 SpSlidemenu(options)
@@ -157,7 +157,7 @@ var sp_slidemenu = SpSlidemenu({
 });
 ```
 
-###Option
+### Option
 
 name | type | default | description
 ------------ | ------------- | ------------ | ------------
@@ -165,7 +165,7 @@ disableCssAnimation | Boolean | false | Use JavaScript Animation. You should set
 disable3d | Boolean | false | When support 3D transform browser and this option set true, it is not used 3D transform and use 2D transform. You should set true, when it is a device which has a bug in 3D transform(old Android or BlackBerry etc).
 direction | String | left | left or right.
 
-###Method
+### Method
 **slideOpen**  
 Open slidemenu.
 
@@ -202,7 +202,7 @@ var sp_slidemenu = SpSlidemenu({
 sp_slidemenu.slideClose();
 ```
 
-###Event
+### Event
 
 ```javascript
 $(document).on('buttonTouchStart-spSlidermenu', function () {
@@ -240,6 +240,6 @@ $(document).on('scrollTouchEnd-spSlidermenu', function () {
 });
 ```
 
-##Demo & Sample
+## Demo & Sample
 
 Demo : [Click here!](http://tokunagakazuya.github.io/sp-slidemenu/sample/demo1.html)

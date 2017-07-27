@@ -352,6 +352,8 @@ SpSlidemenu.prototype.buttonTouchStart = function(event) {
     event.preventDefault ? event.preventDefault() : event.returnValue = false;
     event.stopPropagation? event.stopPropagation(): event.cancelBubble = true;
 
+    triggerEvent('buttonTouchStart');
+
     for (var i = _this.main.length; i--; ) {
         switch(_this.main[i].SpSlidemenuStatus) {
         case SLIDE_STATUS.progress:
@@ -370,6 +372,8 @@ SpSlidemenu.prototype.buttonTouchEnd = function(event) {
 
     event.preventDefault ? event.preventDefault() : event.returnValue = false;
     event.stopPropagation? event.stopPropagation(): event.cancelBubble = true;
+
+    triggerEvent('buttonTouchEnd');
 
     _this.setSize();
     _this.scrollCurrentY = _this.getScrollCurrentY();
@@ -413,6 +417,7 @@ SpSlidemenu.prototype.shouldTrigerNext = function(event) {
 
 SpSlidemenu.prototype.slideOpen = function(event) {
     var _this = this, toX;
+    triggerEvent('slideOpen');
 
     if (_this.direction === 'left') {
         toX = _this.slideWidth;
@@ -463,6 +468,7 @@ SpSlidemenu.prototype.slideOpen = function(event) {
 };
 SpSlidemenu.prototype.slideOpenEnd = function() {
     var _this = this;
+    triggerEvent('slideOpenEnd');
 
     for (var i = _this.main.length; i--; ) {
         _this.main[i].SpSlidemenuStatus = SLIDE_STATUS.open;
@@ -484,6 +490,7 @@ SpSlidemenu.prototype.slideOpenEnd = function() {
 
 SpSlidemenu.prototype.slideClose = function(event) {
     var _this = this;
+    triggerEvent('slideClose');
 
     for (var i = _this.main.length; i--; ) {
         _this.main[i].SpSlidemenuStatus = SLIDE_STATUS.progress;
@@ -527,6 +534,7 @@ SpSlidemenu.prototype.slideClose = function(event) {
 };
 SpSlidemenu.prototype.slideCloseEnd = function() {
     var _this = this;
+    triggerEvent('slideCloseEnd');
 
     for (var i = _this.main.length; i--; ) {
         _this.main[i].SpSlidemenuStatus = SLIDE_STATUS.close;
@@ -552,6 +560,8 @@ SpSlidemenu.prototype.scrollTouchStart = function(event) {
     if (gestureStart) {
         return;
     }
+
+    triggerEvent('scrollTouchStart');
 
     if (_this.scrollOverTimer !== false) {
         clearTimeout(_this.scrollOverTimer);
@@ -598,6 +608,8 @@ SpSlidemenu.prototype.scrollTouchMove = function(event) {
         return;
     }
 
+    triggerEvent('scrollTouchMove');
+
     pageX = getPage(event, 'pageX');
     pageY = getPage(event, 'pageY');
 
@@ -639,6 +651,8 @@ SpSlidemenu.prototype.scrollWheel = function(event) {
     event.preventDefault ? event.preventDefault() : event.returnValue = false;
     event.stopPropagation? event.stopPropagation(): event.cancelBubble = true;
 
+    triggerEvent('scrollWheel');
+
     if(!_this.scrollMaxY) {
         _this.scrollMaxY = _this.calcMaxY();
     }
@@ -662,6 +676,8 @@ SpSlidemenu.prototype.scrollTouchEnd = function(event) {
     if (!_this.scrollTouchStarted) {
         return;
     }
+
+    triggerEvent('scrollTouchEnd');
 
     _this.scrollTouchStarted = false;
     _this.scrollMaxY = _this.calcMaxY();
@@ -1034,6 +1050,17 @@ function removeTouchEvent(eventType, element, listener, useCapture) {
             element.detachEvent('on'+EVENTS[eventType].mouse, listener);
         }
     }
+}
+function triggerEvent(eventName) {
+    var event;
+    eventName += '-spSlidermenu';
+    try {
+        event = new CustomEvent(eventName);
+    } catch (e) {
+        event = document.createEvent('CustomEvent');
+        event.initCustomEvent(eventName, false, false, null);
+    }
+    document.dispatchEvent(event);
 }
 function hasClass(elem, className) {
     className = " " + className + " ";

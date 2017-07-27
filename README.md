@@ -202,6 +202,43 @@ var sp_slidemenu = SpSlidemenu({
 sp_slidemenu.slideClose();
 ```
 
+###Event
+
+```javascript
+$(document).on('buttonTouchStart-spSlidermenu', function () {
+  console.log('Ssp-slidemenu is buttonTouchStart');
+});
+$(document).on('buttonTouchEnd-spSlidermenu', function () {
+  console.log('Ssp-slidemenu is buttonTouchEnd');
+});
+$(document).on('slideOpen-spSlidermenu', function () {
+  console.log('Ssp-slidemenu is slideOpen');
+});
+$(document).on('slideOpenEnd-spSlidermenu', function () {
+  console.log('Ssp-slidemenu is slideOpenEnd');
+});
+$(document).on('slideClose-spSlidermenu', function () {
+  console.log('Ssp-slidemenu is slideClose');
+});
+$(document).on('slideClose-spSlidermenu', function () {
+  console.log('Ssp-slidemenu is slideClose');
+});
+$(document).on('slideCloseEnd-spSlidermenu', function () {
+  console.log('Ssp-slidemenu is slideCloseEnd');
+});
+$(document).on('scrollTouchStart-spSlidermenu', function () {
+  console.log('Ssp-slidemenu is scrollTouchStart');
+});
+$(document).on('scrollTouchMove-spSlidermenu', function () {
+  console.log('Ssp-slidemenu is scrollTouchMove');
+});
+$(document).on('scrollWheel-spSlidermenu', function () {
+  console.log('Ssp-slidemenu is scrollWheel');
+});
+$(document).on('scrollTouchEnd-spSlidermenu', function () {
+  console.log('Ssp-slidemenu is scrollTouchEnd');
+});
+```
 
 ##Demo & Sample
 

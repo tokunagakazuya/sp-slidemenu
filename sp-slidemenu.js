@@ -45,6 +45,11 @@ support.attachEvent = 'attachEvent' in window;
 support.cssAnimation = (support.transform3d || support.transform) && support.transition;
 support.touch = 'ontouchend' in window;
 support.touchAction = hasProp(['touchAction']);
+support.passive = false;
+try {
+    window.addEventListener("checkpassive",    function() {}, { get passive() { support.passive = true; } });
+    window.removeEventListener("checkpassive", function() {}, { get passive() { support.passive = true; } });
+} catch (err) { }
 
 EVENTS = {
     start: {
@@ -227,8 +232,8 @@ SpSlidemenu.prototype.init = function(options) {
     addTouchEvent('wheel', _this.slidemenuContent, _this.scrollWheel, false);
 
     if(support.addEventListener) {
-        _this.slidemenuContent.addEventListener('click', _this.itemClick, false);
-        window.addEventListener('resize', debounce(_this.setSize, 100), false);
+        _this.slidemenuContent.addEventListener('click', _this.itemClick, getEventListenerWithOptions(false));
+        window.addEventListener('resize', debounce(_this.setSize, 100), getEventListenerWithOptions(false));
     } else if(support.attachEvent){
         _this.slidemenuContent.attachEvent('onclick', _this.itemClick);
         window.attachEvent('onresize', debounce(_this.setSize, 100));
@@ -594,7 +599,7 @@ SpSlidemenu.prototype.scrollTouchStart = function(event) {
     _this.scrollPageYForVelocity = _this.scrollStartPageY;
 
     if(support.addEventListener) {
-        _this.slidemenuContent.removeEventListener('click', blockEvent, true);
+        _this.slidemenuContent.removeEventListener('click', blockEvent, getEventListenerWithOptions(true));
     } else if(support.attachEvent){
         _this.slidemenuContent.detachEvent('onclick', blockEvent);
     }
@@ -634,7 +639,7 @@ SpSlidemenu.prototype.scrollTouchMove = function(event) {
         if (deltaX > 5 || deltaY > 5) {
             _this.scrollMoveReady = true;
             if(support.addEventListener) {
-                _this.slidemenuContent.addEventListener('click', blockEvent, true);
+                _this.slidemenuContent.addEventListener('click', blockEvent, getEventListenerWithOptions(true));
             } else if(support.attachEvent){
                 _this.slidemenuContent.attachEvent('onclick', blockEvent);
             }
@@ -1029,10 +1034,10 @@ function addTouchEvent(eventType, element, listener, useCapture) {
     useCapture = useCapture || false;
 
     if (support.touch) {
-        element.addEventListener(EVENTS[eventType].touch, listener, useCapture);
+        element.addEventListener(EVENTS[eventType].touch, listener, getEventListenerWithOptions(useCapture));
     } else {
         if(support.addEventListener) {
-            element.addEventListener(EVENTS[eventType].mouse, listener, useCapture);
+            element.addEventListener(EVENTS[eventType].mouse, listener, getEventListenerWithOptions(useCapture));
         } else if(support.attachEvent){
             element.attachEvent('on'+EVENTS[eventType].mouse, listener);
         }
@@ -1042,10 +1047,10 @@ function removeTouchEvent(eventType, element, listener, useCapture) {
     useCapture = useCapture || false;
 
     if (support.touch) {
-        element.removeEventListener(EVENTS[eventType].touch, listener, useCapture);
+        element.removeEventListener(EVENTS[eventType].touch, listener, getEventListenerWithOptions(useCapture));
     } else {
         if(support.addEventListener) {
-            element.removeEventListener(EVENTS[eventType].mouse, listener, useCapture);
+            element.removeEventListener(EVENTS[eventType].mouse, listener, getEventListenerWithOptions(useCapture));
         } else if(support.attachEvent){
             element.detachEvent('on'+EVENTS[eventType].mouse, listener);
         }
@@ -1121,6 +1126,18 @@ function debounce(func, wait, immediate) {
         if (callNow) result = func.apply(context, args);
         return result;
     };
+}
+function getEventListenerWithOptions(useCapture) {
+    useCapture = useCapture || false;
+
+    if(support.passive) {
+        useCapture = {
+            passive: false,
+            capture: useCapture
+        }
+    }
+
+    return useCapture
 }
 function hasAndroidMaxVersion(version) {
     var ua = navigator.userAgent;

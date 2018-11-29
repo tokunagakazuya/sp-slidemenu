@@ -12,7 +12,7 @@
 ;(function(window, document, undefined) {
 "use strict";
 
-var div, PREFIX, support, gestureStart, EVENTS, ANIME_SPEED, SLIDE_STATUS, SCROLL_STATUS, THRESHOLD, EVENT_MOE_TIME, rclass, ITEM_CLICK_CLASS_NAME, defaults;
+var div, PREFIX, support, gestureStart, EVENTS, ANIME_SPEED, SLIDE_STATUS, SCROLL_STATUS, THRESHOLD, EVENT_MOE_TIME, rclass, ITEM_CLICK_CLASS_NAME, defaults, checkPassiveHandler;
 
 div = document.createElement('div');
 
@@ -47,8 +47,9 @@ support.touch = 'ontouchend' in window;
 support.touchAction = hasProp(['touchAction']);
 support.passive = false;
 try {
-    window.addEventListener("checkpassive",    function() {}, { get passive() { support.passive = true; } });
-    window.removeEventListener("checkpassive", function() {}, { get passive() { support.passive = true; } });
+    checkPassiveHandler = function() {};
+    window.addEventListener("spslidemenucheckpassive",    checkPassiveHandler, { get passive() { support.passive = true; } });
+    window.removeEventListener("spslidemenucheckpassive", checkPassiveHandler, { get passive() { support.passive = true; } });
 } catch (err) { }
 
 EVENTS = {
